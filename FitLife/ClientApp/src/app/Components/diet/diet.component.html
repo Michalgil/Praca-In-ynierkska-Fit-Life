@@ -1,0 +1,90 @@
+<div class="container">
+    <div *ngIf="formError" class="alert alert-danger" role="alert">
+        Bład przy wprowadzaniu danych, wypełnij dane raz jeszcze !
+       </div>
+       <div class="row">
+          <div class="col-xl-6 offset-xl-4">
+            <h1 style="color:white; font-size: 70px">Formularz diety</h1>
+          </div>
+        </div>
+
+  <form [formGroup]="dietForm" (ngSubmit)="createDiet()">
+    <div class="form-group" class="col-xl-7 offset-xl-3" style="margin-top: 100px">
+      <label for="weight" style="color: white">Waga</label>
+      <input type="number" class="form-control" id="weight" placeholder="Waga w kg" formControlName="weight" required>
+    </div>
+    <div class="form-group" class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <label for="height" style="color: white">Wzrost</label>
+      <input type="number" class="form-control" id="height" placeholder="Wzrost w cm" formControlName="height" required>
+    </div>
+    <div class="form-group" class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <label for="age" style="color: white">Wiek</label>
+      <input type="number" class="form-control" id="age" placeholder="Wiek" formControlName="age" required>
+    </div>
+    <div class="form-group" class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <label style="color: white">Aktywność fizyczna w ciągu dnia</label>
+      <select class="custom-select" formControlName="dailyActivity" required>
+        <option value="1">Sporadyczna (brak ćwiczeń, praca siedząca,uczeń)</option>
+        <option value="2">Mała (2 razy w tygodniu ćwiczenia, praca lekka, uczeń)</option>
+        <option value="3">Normalna (2-3 razy w tygodniu ćwiczenia, praca lekka,uczen)</option>
+        <option value="3">Duza (3-4 razy w tygodniu ćwiczenia, praca fizyczna)</option>
+        <option value="3">Bardzo duża (4-6 razy w tygodniu ćwiczenia, praca fizyczna)</option>
+      </select>
+    </div>
+    <div class="form-group" class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <label style="color: white">Wybierz cel diety</label>
+      <select class="custom-select" formControlName="dietTarget" required>
+        <option value="1">Redukcja wagi</option>
+        <option value="2">Nabranie wagi</option>
+        <option value="3">Utrzymanie wagi</option>
+      </select>
+    </div>
+
+    <div class="col-xl-2 offset-xl-9" style="margin-top: 15px">
+        <button class="btn btn-primary" [disabled]="dietForm.invalid" type="submit" (click)="createDiet()">Rozpisz dietę</button>
+      </div>
+  </form>
+</div>
+
+
+
+<!-- <div style=" position: absolute; left: 230px; right: 90px; width: auto;" >
+  <table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th>Nr</th>
+        <th>Posiłek</th>
+        <th>Makroskładniki</th>
+        <th>Produkty Białkowe</th>
+        <th>Produkty Tłuszczowe</th>
+        <th>Produkty Węglowodanowe</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+      </tr>
+      <tr>
+        <td>Mary</td>
+        <td>Moe</td>
+        <td>mary@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+      </tr>
+      <tr>
+        <td>July</td>
+        <td>Dooley</td>
+        <td>july@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+      </tr>
+    </tbody>
+  </table>
+</div> -->

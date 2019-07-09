@@ -1,0 +1,158 @@
+<div *ngIf="showCalculatorForm">
+
+    <div class="textCetner" style="margin-top: 100px">
+        <h1 style="color:white; font-size: 80px">Kalkulatory</h1>
+    </div>
+
+    <div class="row" style="margin-top: 200px">
+        <div class="col-sm-4">
+            <img class="zoom" src='../../assets/Images/1cal.JPG' (click)="Bmi=1" (click)="showBmiForm=1" (click)="showCalculatorForm=0">
+        </div>
+        <div class="col-sm-4">
+            <img class="zoom" src='../../assets/Images/2cal.JPG' (click)="Bmr=1" (click)="showBmrForm=1" (click)="showCalculatorForm=0">
+        </div>
+        <div class="col-sm-4">
+            <img class="zoom" src='../../assets/Images/3cal.JPG' (click)="Whr=1" (click)="showWhrForm=1" (click)="showCalculatorForm=0">
+        </div>
+    </div>
+
+</div>
+
+<div>
+    <div *ngIf="Bmi === 1" class="dropdown-content" style="float:center; margin-left: 220px">
+        <div class="textCetner" style="margin-top: 100px">
+            <h1 style="color:white; font-size: 80px">Kalkulator BMI</h1>
+        </div>
+        <div *ngIf="showBmiForm === 1">
+            <div class="textCetner">
+                <a style="color:white; font-size: 40px; font-family:'Times New Roman', Times, serif">BMI(Body Mass Index) - indeks masy ciała, który służy do określania czy Nasza masa ciała jest prawidłowa.
+                    Wyliczane jest to na podstawie proporcji masy ciała podawanych w kg do wzrostu.</a>
+            </div>
+
+            <div class="form-group">
+                <label for="gender" style="color: white">Płeć</label>
+                <select class="custom-select mr-sm-2" id="gender">
+                    <option selected>Wybierz płeć</option>
+                    <option value="man">Mężczyzna</option>
+                    <option value="woman">Kobieta</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="weight" style="color: white">Waga</label>
+                <input type="number" class="form-control" id="weight" [(ngModel)]="weight">
+            </div>
+            <div class="form-group">
+                <label for="height" style="color: white">Wzrost podany w metrach</label>
+                <input type="number" class="form-control" id="height" [(ngModel)]="height">
+            </div>
+            <button type="submit" class="btn btn-primary" (click)="showBmiForm=0" (click)="showBmiResult=1" (click)="calculateBmi()">Oblicz</button>
+            <button type="submit" class="btn btn-danger" (click)="Bmi=0" (click)="showCalculatorForm=1" (click)="resetValues()">Wróć</button>
+        </div>
+        <div *ngIf="showBmiResult === 1" style="margin-top: 150px">
+            <div class="textCetner">
+                <a style="color:white; font-size: 60px">Twoje BMI wynosi {{bmiValue}} </a>
+            </div>
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th>Wynik</th>
+                        <th>Ocena wagi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BMI &lt; 18.5</td>
+                        <td>niedowaga</td>
+                    </tr>
+                    <tr>
+                        <td>18.5 &le; BMI &le; 24.9</td>
+                        <td>waga prawidłowa</td>
+                    </tr>
+                    <tr>
+                        <td> 25 &le; BMI &le; 29.9</td>
+                        <td>nadwaga</td>
+                    </tr>
+                    <tr>
+                        <td>BMI &le; 30</td>
+                        <td>otyłość</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-danger" (click)="showBmiForm=0" (click)="showBmiResult=0" (click)="Bmi=0" (click)="resetValues()"
+                (click)="showCalculatorForm=1">Wróć</button>
+        </div>
+
+    </div>
+
+    <div *ngIf="Bmr === 1" class="dropdown-content" style="float:center; margin-left: 220px">
+        <div class="textCetner" style="margin-top: 100px">
+            <h1 style="color:white; font-size: 80px">Kalkulator BMR</h1>
+        </div>
+        <div *ngIf="showBmrForm === 1">
+            <div class="textCetner">
+                <a style="color:white; font-size: 40px; font-family:'Times New Roman', Times, serif">BMR - wylicza zapotrzebowanie kaloryczne dla osoby o podanej wadze służące do utrzymania wagi(Należy jednak
+                    pamiętać że BMR wylicza zapotrzebowanie nie wliczając w to aktywności w ciągu dnia).
+                </a>
+            </div>
+
+            <div class="form-group">
+                <label for="gender" style="color: white">Płeć</label>
+                <select class="custom-select mr-sm-2" id="gender">
+                    <option selected>Wybierz płeć</option>
+                    <option value="man">Mężczyzna</option>
+                    <option value="woman">Kobieta</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="weight" style="color: white">Waga</label>
+                <input type="number" class="form-control" id="weight" [(ngModel)]="weight">
+            </div>
+            <button type="submit" class="btn btn-primary" (click)="showBmrForm=0" (click)="showBmrResult=1" (click)="calculateBmr()">Oblicz</button>
+            <button type="submit" class="btn btn-danger" (click)="Bmr=0" (click)="showCalculatorForm=1" (click)="resetValues()">Wróć</button>
+        </div>
+        <div *ngIf="showBmrResult === 1" style="margin-top: 150px">
+            <div class="textCetner">
+                <a style="color:white; font-size: 40px">Twoje BMR wynosi {{bmrValue}}kcal </a>
+            </div>
+            <button type="submit" class="btn btn-danger" (click)="showBmrForm=0" (click)="showBmrResult=0" (click)="Bmr=0" (click)="resetValues()"
+                (click)="showCalculatorForm=1">Wróć</button>
+        </div>
+    </div>
+
+    <div *ngIf="Whr === 1" class="dropdown-content" style="float:center; margin-left: 220px">
+        <div class="textCetner" style="margin-top: 100px">
+            <h1 style="color:white; font-size: 80px">Kalkulator WHR</h1>
+        </div>
+        <div *ngIf="showWhrForm === 1">
+            <div class="textCetner">
+                <a style="color:white; font-size: 40px; font-family:'Times New Roman', Times, serif">WHR</a>
+            </div>
+
+            <div class="form-group">
+                <label for="gender" style="color: white">Płeć</label>
+                <select class="custom-select mr-sm-2" id="gender"  (change)="selectChangeHandler($event)">
+                    <option selected>Wybierz płeć</option>
+                    <option value="man">Mężczyzna</option>
+                    <option value="woman">Kobieta</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="waist" style="color: white">Obwód talii</label>
+                <input type="number" class="form-control" id="waist" [(ngModel)]="waist">
+            </div>
+            <div class="form-group">
+                <label for="hips" style="color: white">Obwód bioder</label>
+                <input type="number" class="form-control" id="hips" [(ngModel)]="hips">
+            </div>
+            <button type="submit" class="btn btn-primary" (click)="showWhrForm=0" (click)="showWhrResult=1" (click)="calculateWhr()">Oblicz</button>
+            <button type="submit" class="btn btn-danger" (click)="Whr=0" (click)="showCalculatorForm=1" (click)="resetValues()">Wróć</button>
+        </div>
+        <div *ngIf="showWhrResult === 1" style="margin-top: 150px">
+            <div class="textCetner">
+                <a style="color:white; font-size: 40px">Twoje WHR wynosi  {{whrValue}} oraz {{whrdescribe}}</a>
+            </div>
+            <button type="submit" class="btn btn-danger" (click)="showWhrForm=0" (click)="showWhrResult=0" (click)="Whr=0" (click)="resetValues()"
+                (click)="showCalculatorForm=1">Wróć</button>
+        </div>
+    </div>
+</div>

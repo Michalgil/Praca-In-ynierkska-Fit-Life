@@ -1,0 +1,67 @@
+<div class="container">
+
+  <div *ngIf="formError" class="alert alert-danger" role="alert">
+   Bład przy wprowadzaniu danych, wypełnij dane raz jeszcze !
+  </div>
+  
+  <div class="row">
+    <div class="col-xl-6 offset-xl-4">
+      <h1 style="color:white; font-size: 70px">Zarejestruj się</h1>
+    </div>
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <div class="col-xl-7 offset-xl-3" style="margin-top: 150px">
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <i style="color: white" class="fa fa-envelope fa-4x"></i>
+        </span>
+        <input type="text" class="form-control" formControlName="email" placeholder="Email" required>
+      </div>
+    </div>
+    <div class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <i style="color: white" class="fa fa-user fa-4x"></i>
+        </span>
+        <input type="text" class="form-control" formControlName="name" placeholder="Imie" required>
+      </div>
+    </div>
+    <div class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <i style="color: white" class="fa fa-user fa-4x"></i>
+        </span>
+        <input type="text" class="form-control" formControlName="surname" placeholder="Nazwisko" required>
+      </div>
+    </div>
+    <div class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <i style="color: white" class="fa fa-key fa-4x"></i>
+        </span>
+        <input type="password" class="form-control" formControlName="password" placeholder="Hasło" required>
+      </div>
+    </div>
+    <div class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <i style="color: white" class="fa fa-key fa-4x"></i>
+        </span>
+        <input type="password" class="form-control" formControlName="repeatPassword" placeholder="Potwórz hasło"
+          required>
+      </div>
+    </div>
+    <div class="row" class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <select class="form-control" formControlName="selectedGender" [(ngModel)]="selectedGenderValue" (ngModelChange)="onChangeGender($event)" required>
+        <option value="" selected disabled>Wybierz płeć</option>
+        <option *ngFor="let g of gender" [ngValue]="g">{{g.name}}</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="col-xl-2 offset-xl-9" style="margin-top: 15px">
+        <button class="btn btn-primary" [disabled]="registerForm.invalid" type="submit" (click)="register()">Zarejestruj</button>
+      </div>
+    </div>
+  </form>
+</div>

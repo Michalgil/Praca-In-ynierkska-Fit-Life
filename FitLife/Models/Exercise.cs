@@ -5,13 +5,17 @@ using System.Threading.Tasks;
 
 namespace FitLife.Models
 {
-    public class Product
+    public class Exercise
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int NutritionalValue { get; set; }
 
-        public string Category { get; set; }
+       
+
+        public virtual PartOfBody PartOfBody { get; set; }
+
+        public virtual ICollection<TrainingExercise> TrainingExercises { get; set; }
+
 
     }
 }

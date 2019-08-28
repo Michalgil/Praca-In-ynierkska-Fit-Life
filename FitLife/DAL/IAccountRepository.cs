@@ -1,4 +1,5 @@
-﻿using FitLife.ViewModels;
+﻿using FitLife.Models;
+using FitLife.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,7 @@ namespace FitLife.DAL
     {
         Task<String> Login(LoginJson loginModel);
         Task<String> Register(RegisterJson registerJson);
+        Task SignOut();
+        Task<ApplicationUser> GetCurrentUser();
     }
 }

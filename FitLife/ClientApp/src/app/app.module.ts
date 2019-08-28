@@ -1,3 +1,6 @@
+import { TrainingService } from './services/Training/training.service';
+import { ProductService } from './services/Product/product.service';
+import { DietService } from './services/Diet/diet.service';
 import { AuthGuard } from './guards/auth.guard';
 import { AccountService } from './services/Account/account.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -16,6 +19,8 @@ import { TrainingComponent } from './Components/training/training.component';
 import { ProgressComponent } from './Components/progress/progress.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -34,10 +39,15 @@ import { RegisterComponent } from './components/register/register.component';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    NgxPaginationModule,
+    Ng2SearchPipeModule,
     AppRoutingModule
   ],
   providers: [
     AccountService,
+    DietService,
+    ProductService,
+    TrainingService,
     AuthGuard
   ],
   bootstrap: [AppComponent]

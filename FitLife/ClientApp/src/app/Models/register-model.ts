@@ -1,7 +1,6 @@
 export class RegisterModel{
     constructor(
-        public name: string,
-        public surname: string,
+        public userName: string,
         public password: string,
         public email: string,
         public isMale: boolean

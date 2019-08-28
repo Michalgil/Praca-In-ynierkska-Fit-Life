@@ -1,61 +1,110 @@
-<div style="margin-left: 230px">
-  <form>
-    <div class="form-group">
-      <label for="age" style="color: white">Wiek</label>
-      <input type="text" class="form-control" id="age" placeholder="Wiek">
-    </div>
-    <div class="form-group">
-      <label for="target" style="color: white">Płeć</label>
-      <select class="custom-select">
-        <option selected>Wybierz Płeć</option>
-        <option value="1">Mężczyzna</option>
-        <option value="2">Kobieta</option>
+<div *ngIf="formError" class="alert alert-danger" role="alert">
+  Bład przy wprowadzaniu danych, wypełnij dane raz jeszcze !
+</div>
+
+<div *ngIf="crateTrainingForm">
+  <form [formGroup]="trainingForm" (ngSubmit)="createTraning()">
+    <div class="form-group" class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <label style="color: white">Partia na której Nam zależy</label>
+      <select class="custom-select" formControlName="priorityPart" title="Jeżeli zależy Ci na rozbudowaniu partii w której masz największe braki to proszę wybrać z listy tą partie">
+        <option value="Klatka piersiowa">Klatka piersiowa</option>
+        <option value="Plecy">Plecy</option>
+        <option value="Biceps">Biceps</option>
+        <option value="Triceps">Triceps</option>
+        <option value="Ramiona">Ramiona</option>
+        <option value="Nogi">Nogi</option>
+        <option value="Pośladki">Pośladki</option>
+        <option value="0">Nie skupiamy się szczególnie na żadnej partii</option>
       </select>
     </div>
-    <div class="form-group">
-      <label for="priorityPart" style="color: white" >Partia na której Nam zależy</label>
-      <select class="custom-select" data-toggle="tooltip" data-placement="top" title="Jeżeli zależy Ci na rozbudowaniu partii w której masz największe braki to proszę wybrać z listy tą partie">
-        <option selected>Wybierz partie</option>
-        <option value="1">Klatka piersiowa</option>
-        <option value="2">Plecy</option>
-        <option value="3">Biceps</option>
-        <option value="3">Triceps</option>
-        <option value="3">Barki</option>
-        <option value="3">Nogi</option>
-        <option value="3">Pośladki</option>
-        <option value="3">Nie skupiamy sie szczególnie na żadnej partii</option>
+    <div class="form-group" class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+      <label style="color: white">Doświadczenie na siłowni</label>
+      <select class="custom-select" formControlName="experience">
+        <option value="1">0-6msc</option>
+        <option value="2">6-12msc</option>
+        <option value="3">Więcej niż rok</option>
       </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Rozpisz trening</button>
+    <div class="col-xl-2 offset-xl-8" style="margin-top: 15px">
+      <button class="btn btn-primary" [disabled]="trainingForm.invalid" type="submit" (click)="createTraning()">Wyślij formularz</button>
+    </div>
   </form>
 </div>
 
-<div style=" position: absolute; left: 230px; right: 90px; width: auto;" >
-  <table class="table table-dark table-hover">
-    <thead>
-      <tr>
-        <th>Dzień</th>
-        <th>Partie</th>
-        <th>Ćwiczenia</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
-      </tr>
-    </tbody>
-  </table>
+<div *ngIf="!crateTrainingForm">
+
+  <div *ngIf="trainingPlan.length == 3">
+    <div class="col-xl-7 offset-xl-3">
+      <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action active" aria-disabled="true">
+          <p style="font-size: 25px; text-align: center">Twój trening</p>
+        </button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(0)">Plecy + biceps</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(1)">Klatka piersiowa + ramiona + triceps</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)" *ngIf="trainingPlan[2].ApplicationUser.isMale == true">Nogi</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)" *ngIf="trainingPlan[2].ApplicationUser.isMale == false">Nogi + pośladki</button>
+      </div>
+    </div>
+
+    <!-- <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th>Nazwa partii</th>
+          <th>Ćwiczenie</th>
+          <th>Ilosc serii x powtórzeń</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let exercise of trainingPlan[numberOfTraining].TrainingExercises">
+          <td>{{exercise.Name}}</td>
+          <td>Doe</td>
+          <td>john@example.com</td>
+        </tr>
+        <tr>
+          <td>Mary</td>
+          <td>Moe</td>
+          <td>mary@example.com</td>
+        </tr>
+        <tr>
+          <td>July</td>
+          <td>Dooley</td>
+          <td>july@example.com</td>
+        </tr>
+      </tbody>
+    </table> -->
+
+  </div>
+
+  <div *ngIf="trainingPlan.length == 4">
+    <div class="col-xl-7 offset-xl-3">
+      <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action active" aria-disabled="true">
+          <p style="font-size: 25px; text-align: center">Twój trening</p>
+        </button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(0)">Plecy + brzuch</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(1)">Biceps + triceps</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)">Klatka piersiowa + ramiona</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(3)" *ngIf="trainingPlan[3].ApplicationUser.isMale == true">Nogi</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(3)" *ngIf="trainingPlan[3].ApplicationUser.isMale == false">Nogi + pośladki</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="trainingPlan.length == 5">
+    <div class="col-xl-7 offset-xl-3">
+      <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action active" aria-disabled="true">
+          <p style="font-size: 25px; text-align: center">Twój trening</p>
+        </button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(0)">Plecy + brzuch</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(1)">Biceps + triceps</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)">Klatka piersiowa</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(3)">Ramiona + brzuch</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(4)" *ngIf="trainingPlan[4].ApplicationUser.isMale == true">Nogi</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(4)" *ngIf="trainingPlan[4].ApplicationUser.isMale == false">Nogi + pośladki</button>
+      </div>
+    </div>
+  </div>
+
 </div>

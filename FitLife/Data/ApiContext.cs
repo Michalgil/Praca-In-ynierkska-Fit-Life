@@ -11,10 +11,13 @@ namespace FitLife.Data
 {
     public class AplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationUserRole, string>
     { 
-    
-        // zmienilem przy identityDbcontext<IdentityUser,IdentityRole,string> na swoje wlasne
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<Meal> Meals { get; set; }
+        public DbSet<Diet> Diets { get; set; }
+        public DbSet<Training> Trainings { get; set; }
+        public DbSet<Exercise> Exercises { get; set; }
+        public DbSet<PartOfBody> PartsOfBody { get; set; }
+        public DbSet<TrainingExercise> TrainingExercises { get; set; }
         public AplicationDbContext(DbContextOptions<AplicationDbContext> options) : base(options)
         {
 
@@ -28,16 +31,6 @@ namespace FitLife.Data
                 .ToTable("Product");
             modelBuilder.Entity<Product>()
                 .HasKey(c => c.Id);
-            modelBuilder.Entity<Product>()
-                .HasOne(c => c.ProductCategory)
-                .WithMany(pc => pc.Products)
-                .HasForeignKey(c => c.ProductCategoryId);
-
-            modelBuilder.Entity<ProductCategory>()
-                .ToTable("ProductCategory");
-            modelBuilder.Entity<ProductCategory>()
-                .HasKey(pc => pc.Id);
-
 
             modelBuilder.Entity<Meal>()
                 .ToTable("Meal");
@@ -48,12 +41,47 @@ namespace FitLife.Data
                 .WithMany(d => d.Meals)
                 .HasForeignKey(m => m.DietId);
 
+
             modelBuilder.Entity<Diet>()
                 .ToTable("Diet");
-            modelBuilder.Entity<ProductCategory>()
-                .HasKey(d => d.Id);
+            modelBuilder.Entity<Diet>()
+               .HasKey(d => d.Id);
+            modelBuilder.Entity<Diet>()
+                .HasOne(d => d.ApplicationUser)
+                .WithMany(au => au.Diets)
+                .HasForeignKey(d => d.ApplicationUserId);
 
-            ///dodac usera do tego
+            modelBuilder.Entity<TrainingExercise>()
+                .ToTable("TrainingExercise");
+            modelBuilder.Entity<TrainingExercise>()
+       .HasKey(te => new { te.TrainingId, te.ExerciseId });
+            modelBuilder.Entity<TrainingExercise>()
+                .HasOne(te => te.Training)
+                .WithMany(t => t.TrainingExercises)
+                .HasForeignKey(te => te.TrainingId);
+            modelBuilder.Entity<TrainingExercise>()
+                .HasOne(te => te.Exercise)
+                .WithMany(e => e.TrainingExercises)
+                .HasForeignKey(te => te.ExerciseId);
+
+            modelBuilder.Entity<Training>()
+                .ToTable("Training");
+            modelBuilder.Entity<Training>()
+                .HasKey(t => t.Id);
+
+            modelBuilder.Entity<Exercise>()
+                .ToTable("Exercise");
+            modelBuilder.Entity<Exercise>()
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<PartOfBody>()
+                .ToTable("PartOfBody");
+            modelBuilder.Entity<PartOfBody>()
+                 .HasKey(p => p.Id);
+            modelBuilder.Entity<PartOfBody>()
+                 .HasMany(p => p.Exercises)
+                 .WithOne(e => e.PartOfBody);
+
 
 
 

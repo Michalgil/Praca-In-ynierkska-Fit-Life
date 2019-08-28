@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'calculators', component: CalculatorsComponent },
   { path: 'diet', component: DietComponent },
-  { path: 'training', component: TrainingComponent, canActivate: [AuthGuard] },
+  { path: 'training', component: TrainingComponent},//, canActivate: [AuthGuard] 
   { path: 'progress', component: ProgressComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent },

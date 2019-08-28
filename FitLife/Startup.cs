@@ -1,19 +1,24 @@
 using FitLife.DAL;
 using FitLife.Data;
 using FitLife.Models;
+using FitLife.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
+using System.Buffers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -35,7 +40,7 @@ namespace FitLife
             services.AddIdentity<ApplicationUser, ApplicationUserRole>()
                 .AddEntityFrameworkStores<AplicationDbContext>()
                 .AddDefaultTokenProviders();
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // dodalem to, nie wiem po co ;p
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -51,19 +56,22 @@ namespace FitLife
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
-
+            
             services.AddCors();
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("CorsPolicy",
-            //        builder => builder.AllowAnyOrigin()
-            //          .AllowAnyMethod()
-            //          .AllowAnyHeader()
-            //          .AllowCredentials()
-            //    .Build());
-            //});
 
-            services.AddMvc();
+            //services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.OutputFormatters.Clear();
+                options.OutputFormatters.Add(new JsonOutputFormatter(new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                }, ArrayPool<char>.Shared));
+            });
+
+
+
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -73,7 +81,11 @@ namespace FitLife
             });
 
             services.AddTransient<IAccountRepository, AccountRepository>();
-
+            services.AddTransient<IDietRepository, DietRepository>();
+            services.AddTransient<ITrainingRepository, TrainingRepository>();
+            services.AddScoped<DietService>();
+            services.AddScoped<TrainingService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -88,9 +100,7 @@ namespace FitLife
                 app.UseHsts();
             }
 
-           // app.UseCors("CorsPolicy");
-
-            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
 
             app.UseAuthentication();

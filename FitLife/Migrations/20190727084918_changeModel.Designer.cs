@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitLife.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    [Migration("20190708161138_FixProductCategory")]
-    partial class FixProductCategory
+    [Migration("20190727084918_changeModel")]
+    partial class changeModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -98,34 +98,137 @@ namespace FitLife.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
+            modelBuilder.Entity("FitLife.Models.Diet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<int>("Carbohydrates");
+
+                    b.Property<int>("Fat");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<int>("Kcal");
+
+                    b.Property<int>("Protein");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Diet");
+                });
+
+            modelBuilder.Entity("FitLife.Models.Exercise", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<int?>("PartOfBodyId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PartOfBodyId");
+
+                    b.ToTable("Exercise");
+                });
+
+            modelBuilder.Entity("FitLife.Models.Meal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Carbohydrates");
+
+                    b.Property<int>("DietId");
+
+                    b.Property<int>("Fat");
+
+                    b.Property<int>("Kcal");
+
+                    b.Property<int>("NumberOfMeal");
+
+                    b.Property<int>("Protein");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DietId");
+
+                    b.ToTable("Meal");
+                });
+
+            modelBuilder.Entity("FitLife.Models.PartOfBody", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PartOfBody");
+                });
+
             modelBuilder.Entity("FitLife.Models.Product", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Category");
 
                     b.Property<string>("Name");
 
                     b.Property<int>("NutritionalValue");
 
-                    b.Property<string>("ProductCategoryId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductCategoryId");
 
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("FitLife.Models.ProductCategory", b =>
+            modelBuilder.Entity("FitLife.Models.Training", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CategoryName");
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<int>("Break");
+
+                    b.Property<bool>("isAdvanced");
+
+                    b.Property<bool>("isBegginer");
+
+                    b.Property<bool>("isIntermediate");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategory");
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Training");
+                });
+
+            modelBuilder.Entity("FitLife.Models.TrainingExercise", b =>
+                {
+                    b.Property<int>("TrainingId");
+
+                    b.Property<int>("ExerciseId");
+
+                    b.HasKey("TrainingId", "ExerciseId");
+
+                    b.HasIndex("ExerciseId");
+
+                    b.ToTable("TrainingExercise");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -214,11 +317,46 @@ namespace FitLife.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("FitLife.Models.Product", b =>
+            modelBuilder.Entity("FitLife.Models.Diet", b =>
                 {
-                    b.HasOne("FitLife.Models.ProductCategory", "ProductCategory")
-                        .WithMany("Products")
-                        .HasForeignKey("ProductCategoryId");
+                    b.HasOne("FitLife.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Diets")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("FitLife.Models.Exercise", b =>
+                {
+                    b.HasOne("FitLife.Models.PartOfBody", "PartOfBody")
+                        .WithMany("Exercises")
+                        .HasForeignKey("PartOfBodyId");
+                });
+
+            modelBuilder.Entity("FitLife.Models.Meal", b =>
+                {
+                    b.HasOne("FitLife.Models.Diet", "Diet")
+                        .WithMany("Meals")
+                        .HasForeignKey("DietId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("FitLife.Models.Training", b =>
+                {
+                    b.HasOne("FitLife.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("trainings")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("FitLife.Models.TrainingExercise", b =>
+                {
+                    b.HasOne("FitLife.Models.Exercise", "Exercise")
+                        .WithMany("TrainingExercises")
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("FitLife.Models.Training", "Training")
+                        .WithMany("TrainingExercises")
+                        .HasForeignKey("TrainingId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

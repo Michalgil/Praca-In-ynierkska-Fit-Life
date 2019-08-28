@@ -29,6 +29,8 @@ export class AccountService {
 
   logoutUser(){
     localStorage.removeItem(Constants.AUTH_TOKEN);
+    this.http.get("https://localhost:44348/api/Account/signout");
     this.router.navigate(['/login']);
+    
   }
 }

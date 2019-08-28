@@ -4,6 +4,7 @@ export class DietData{
         public height: number,
         public age: number,
         public dailyActivity: number,
-        public dietTarget: number
+        public dietTarget: number,
+        public gender: boolean
     ){};
 }

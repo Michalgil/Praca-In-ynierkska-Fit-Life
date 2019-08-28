@@ -9,5 +9,9 @@ namespace FitLife.Models
     public class ApplicationUser : IdentityUser
     {
         public Boolean isMale { get; set; }
+
+        public virtual ICollection<Training> trainings { get; set; }
+
+        public virtual ICollection<Diet> Diets { get; set; }
     }
 }

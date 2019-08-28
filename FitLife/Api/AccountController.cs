@@ -43,6 +43,19 @@ namespace FitLife.Api
 
             return new BadRequestResult();
         }
+        [HttpGet("signout")]
+        public async Task<IActionResult> SignOut()
+        {
+            try
+            {
+                await accountRepository.SignOut();
+                return Ok();
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
+        }
 
     }
 }

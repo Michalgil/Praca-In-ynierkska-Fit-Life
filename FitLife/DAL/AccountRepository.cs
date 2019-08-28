@@ -1,6 +1,8 @@
 ﻿using FitLife.Data;
 using FitLife.Models;
 using FitLife.ViewModels;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,22 +23,25 @@ namespace FitLife.DAL
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IConfiguration configuration;
         private AplicationDbContext db;
+        IHttpContextAccessor httpContextAccessor;
 
-        public AccountRepository(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IConfiguration configuration, AplicationDbContext db)
+        public AccountRepository(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IConfiguration configuration, AplicationDbContext db, IHttpContextAccessor httpContextAccessor)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.configuration = configuration;
             this.db = db;
+            this.httpContextAccessor = httpContextAccessor;
         }
         public async Task<String> Login(LoginJson loginModel)
         {
-            var result = await signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, false);
+            var user = await userManager.FindByEmailAsync(loginModel.Email);
+            var result = await signInManager.PasswordSignInAsync(user.UserName, loginModel.Password, false, false);
 
             if (result.Succeeded)
             {
-                var appUser = userManager.Users.FirstOrDefault(u => u.Email == loginModel.Email);
-                return GenerateJwtToken(loginModel.Email, appUser);
+                var appUser = userManager.Users.FirstOrDefault(u => u.Email == user.Email);
+                return GenerateJwtToken(user.Email, appUser);
             }
 
             return null;
@@ -44,7 +49,7 @@ namespace FitLife.DAL
 
         public async Task<string> Register(RegisterJson registerModel)
         {
-            var IfExists = userManager.FindByEmailAsync(registerModel.Email);
+            var IfExists = await userManager.FindByEmailAsync(registerModel.Email);
             if (IfExists != null)
             {
                 return null;
@@ -52,7 +57,7 @@ namespace FitLife.DAL
             ApplicationUser user = new ApplicationUser
             {
 
-                UserName = registerModel.Name,
+                UserName = registerModel.UserName,
                 isMale = registerModel.IsMale,
                 Email = registerModel.Email
             };
@@ -66,7 +71,12 @@ namespace FitLife.DAL
 
             return null;
         }
+        public async Task<ApplicationUser> GetCurrentUser()
+        {
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
+            return await userManager.FindByIdAsync(userId);
+        }
         private string GenerateJwtToken(string email, ApplicationUser user)
         {
             var claims = new List<Claim>
@@ -85,6 +95,11 @@ namespace FitLife.DAL
              expires: DateTime.Now.AddMinutes(30),
              signingCredentials: creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task SignOut()
+        {
+            
         }
         private bool disposed = false;
         protected virtual void Dispose(bool disposing)

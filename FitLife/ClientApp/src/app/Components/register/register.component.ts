@@ -34,8 +34,7 @@ export class RegisterComponent implements OnInit {
       email: ['',[ Validators.required, Validators.email]],
       password: ['', Validators.required],
       repeatPassword: ['', Validators.required],
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
+      userName: ['', Validators.required],
       selectedGender: ['', Validators.required]
     });
   }
@@ -52,7 +51,7 @@ export class RegisterComponent implements OnInit {
 
   getDataFromForm(): RegisterModel{
     const registerFormModel = this.registerForm.value;
-    return new RegisterModel(registerFormModel.name as string, registerFormModel.surname as string, registerFormModel.password as string, registerFormModel.email as string, this.selectedGenderValue.isMale as boolean);
+    return new RegisterModel(registerFormModel.userName as string, registerFormModel.password as string, registerFormModel.email as string, this.selectedGenderValue.isMale as boolean);
   }
 
   onChangeGender(genderValue){

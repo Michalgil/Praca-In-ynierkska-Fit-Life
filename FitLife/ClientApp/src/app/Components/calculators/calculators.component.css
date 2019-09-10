@@ -7,3 +7,18 @@
     -webkit-transform: scale(1.4); /* Safari 3-8 */
     transform: scale(1.4); 
 }
+
+.image{
+    background-image:url('https://www.thecalculatorsite.com/images/facebook-share-images/bmi-calculator.jpg');
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+
+
+
+
+  
+

@@ -31,6 +31,12 @@ export class AccountService {
     localStorage.removeItem(Constants.AUTH_TOKEN);
     this.http.get("https://localhost:44348/api/Account/signout");
     this.router.navigate(['/login']);
-    
+  }
+  getUsers(){
+    return this.http.get<any>("https://localhost:44348/api/Account/getAllUsers");
+  }
+
+  sendMeal(meal: any){
+    return this.http.post("https://localhost:44348/api/Account/sendEmail", meal);
   }
 }

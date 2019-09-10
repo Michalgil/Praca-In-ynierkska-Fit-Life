@@ -14,5 +14,8 @@ export class DietService {
   getCurrentDiet() : Observable<any>{
     return this.http.get("https://localhost:44348/api/Diet/getCurrentDiet");
   }
+  updateDiet(dietData: DietData) : Observable<any>{
+    return this.http.post<any>("https://localhost:44348/api/Diet/updateDiet",dietData)
+  }
 
 }

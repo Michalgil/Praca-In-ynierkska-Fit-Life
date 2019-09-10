@@ -106,19 +106,58 @@ namespace FitLife.Migrations
 
                     b.Property<int>("Carbohydrates");
 
+                    b.Property<DateTime?>("Date");
+
                     b.Property<int>("Fat");
 
                     b.Property<bool>("IsActive");
 
                     b.Property<int>("Kcal");
 
+                    b.Property<bool>("Mass");
+
                     b.Property<int>("Protein");
+
+                    b.Property<int>("Weight");
+
+                    b.Property<bool>("WeightMaintenance");
+
+                    b.Property<bool>("WeightReduction");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Diet");
+                });
+
+            modelBuilder.Entity("FitLife.Models.Dimensions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<float>("Arms");
+
+                    b.Property<float>("Buttocks");
+
+                    b.Property<float>("Chest");
+
+                    b.Property<DateTime?>("Date");
+
+                    b.Property<float>("Thig");
+
+                    b.Property<float>("Waist");
+
+                    b.Property<bool>("isActive");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Dimensions");
                 });
 
             modelBuilder.Entity("FitLife.Models.Exercise", b =>
@@ -203,11 +242,17 @@ namespace FitLife.Migrations
 
                     b.Property<int>("Break");
 
-                    b.Property<bool>("isAdvanced");
+                    b.Property<DateTime?>("Date");
 
-                    b.Property<bool>("isBegginer");
+                    b.Property<bool>("IsActive");
 
-                    b.Property<bool>("isIntermediate");
+                    b.Property<bool>("IsAdvanced");
+
+                    b.Property<bool>("IsBegginer");
+
+                    b.Property<bool>("IsIntermediate");
+
+                    b.Property<string>("PriorityPart");
 
                     b.HasKey("Id");
 
@@ -319,6 +364,13 @@ namespace FitLife.Migrations
                 {
                     b.HasOne("FitLife.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Diets")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("FitLife.Models.Dimensions", b =>
+                {
+                    b.HasOne("FitLife.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Dimensions")
                         .HasForeignKey("ApplicationUserId");
                 });
 

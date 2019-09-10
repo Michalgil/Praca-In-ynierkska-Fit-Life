@@ -1,0 +1,7 @@
+.image{
+    background-image:url('https://images.pexels.com/photos/2833312/pexels-photo-2833312.jpeg?cs=srgb&dl=basket-classic-color-2833312.jpg&fm=jpg');
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }

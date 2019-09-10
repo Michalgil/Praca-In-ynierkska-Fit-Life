@@ -86,6 +86,7 @@ namespace FitLife
             services.AddScoped<DietService>();
             services.AddScoped<TrainingService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IAplicationDbContext, AplicationDbContext>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

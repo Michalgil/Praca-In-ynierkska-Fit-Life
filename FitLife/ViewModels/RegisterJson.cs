@@ -10,8 +10,8 @@ namespace FitLife
     {
         public string UserName { get; set; }
         public string Email { get; set; }
-        public Boolean IsMale { get; set; }
         public string Password { get; set; }
+        public Boolean IsMale { get; set; }
 
 
         

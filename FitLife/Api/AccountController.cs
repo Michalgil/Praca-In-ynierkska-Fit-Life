@@ -24,8 +24,8 @@ namespace FitLife.Api
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginJson loginJson)
         {
-           var tokenValue = await accountRepository.Login(loginJson);
-            if (tokenValue.GetType() == typeof(String) )
+            var tokenValue = await accountRepository.Login(loginJson);
+            if (tokenValue.GetType() == typeof(String))
             {
                 return Ok(new { token = tokenValue });
             }
@@ -43,6 +43,7 @@ namespace FitLife.Api
 
             return new BadRequestResult();
         }
+
         [HttpGet("signout")]
         public async Task<IActionResult> SignOut()
         {
@@ -56,6 +57,48 @@ namespace FitLife.Api
                 return new BadRequestResult();
             }
         }
+
+        [HttpPost("sendEmail")]
+        public IActionResult SendEmail([FromBody] MessageJson meal)
+        {
+            try
+            {
+                accountRepository.SendDiet(meal.Message);
+                return Ok();
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
+        }
+        [HttpGet("getAllUsers")]
+        public IActionResult GetAllUsers()
+        {
+            try
+            {
+                var users = accountRepository.GetAllUsers();
+                return Ok(users);
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
+        }
+        [HttpPost("removeUser")]
+        public IActionResult RemoveUser([FromBody] string id)
+        {
+            try
+            {
+                accountRepository.RemoveUser(id);
+                return Ok();
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
+        }
+
+
 
     }
 }

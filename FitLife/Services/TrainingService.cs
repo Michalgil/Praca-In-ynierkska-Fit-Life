@@ -13,6 +13,7 @@ namespace FitLife.Services
         private ITrainingRepository trainingRepository;
         private IAccountRepository accountRepository;
         static Random rnd = new Random();
+        private List<Task> taskList = new List<Task>();
 
         public TrainingService(ITrainingRepository trainingRepository, IAccountRepository accountRepository)
         {
@@ -20,39 +21,45 @@ namespace FitLife.Services
             this.accountRepository = accountRepository;
         }
         
-        public async Task<List<Training>> CreateTrainingPlan (TrainingDataJson traningData)
+        public async Task<List<Training>> CreateTrainingPlan (TrainingDataJson trainingData)
         {
+            
             var user = await accountRepository.GetCurrentUser();
             List<Training> trainingPlanList = new List<Training>();
             int breakTime = 0;
             
-            if (traningData.Experience == 1)
+            if (trainingData.Experience == 1)
             {
                 breakTime = 120;
-                var trainingPlan = await GetTrainingPlan(3, breakTime, user);
+                var trainingPlan = await GetReadyTrainingPlan(3, breakTime, user, trainingData.PriorityPart);
                 trainingPlanList = trainingPlan.ToList();
 
             }
-            else if (traningData.Experience == 2)
+            else if (trainingData.Experience == 2)
             {
                 breakTime = 90;
-                var trainingPlan = await GetTrainingPlan(4, breakTime, user);
+                var trainingPlan = await GetReadyTrainingPlan(4, breakTime, user, trainingData.PriorityPart);
                 trainingPlanList = trainingPlan.ToList();
             }
             else
             {
                 breakTime = 60;
-                breakTime = 90;
-                var trainingPlan = await GetTrainingPlan(5, breakTime, user);
+                var trainingPlan = await GetReadyTrainingPlan(5, breakTime, user, trainingData.PriorityPart);
                 trainingPlanList = trainingPlan.ToList();
             }
+            //if (trainingData.PriorityPart != null)
+            //{
+            //    var result = await AddPriorityExercise(trainingPlanList, trainingData.PriorityPart);
+            //    await trainingRepository.Save();
+            //    return result;
+            //}
+            await trainingRepository.Save();
             return trainingPlanList;
-
         }
 
-        public async Task<List<Training>> GetTrainingPlan(int trainingsPerWeek,int breakTime, ApplicationUser user)
+        public async Task<List<Training>> GetReadyTrainingPlan(int trainingsPerWeek,int breakTime, ApplicationUser user, string priorityPart)
         {
-            List<Exercise> exercisesForTraining;
+            List<Exercise> exercisesForTraining; //usunac newlist
             List<Training> TrainingPlanList = new List<Training>();
 
 
@@ -62,26 +69,30 @@ namespace FitLife.Services
                 {
                     Break = breakTime,
                     ApplicationUser = user,
-                };
+                    ApplicationUserId = user.Id,
+                    Date = DateTime.Now,
+                    PriorityPart = priorityPart,
+                    IsActive = true
+            };
 
                 if(trainingsPerWeek == 3)
                 {
-                    training.isBegginer = true;
+                    training.IsBegginer = true;
                     exercisesForTraining = await GetExercisesForBegginer(trainingsPerWeek, user.isMale, i);
                 }
                 else if(trainingsPerWeek == 4)
                 {
-                    training.isIntermediate = true;
-                    exercisesForTraining = await GetExercisesForIntermediate(trainingsPerWeek, user.isMale, i);
+                    training.IsIntermediate = true;
+                    exercisesForTraining =  await GetExercisesForIntermediate(trainingsPerWeek, user.isMale, i);
                 }
                 else
                 {
-                    training.isAdvanced = true;
-                    exercisesForTraining = await GetExercisesForAdvanced(trainingsPerWeek, user.isMale, i);
+                    training.IsAdvanced = true;
+                    exercisesForTraining =  await GetExercisesForAdvanced(trainingsPerWeek, user.isMale, i);
                 }
 
                 await trainingRepository.AddTraining(training);
-                foreach(Exercise e in exercisesForTraining)
+                foreach (Exercise e in exercisesForTraining)
                 {
                     TrainingExercise te = new TrainingExercise
                     {
@@ -107,7 +118,7 @@ namespace FitLife.Services
 
             if (numberOfTraining == 1)
             {
-                var backExercises = await trainingRepository.GetBackExercises();
+                var backExercises =  await trainingRepository.GetBackExercises();
                 var bicepsExercises = await trainingRepository.GetBicepsExercises();
                 var randomNumberForBack = GetRandomNumbers(backExercises.Count(), 3);
                 var randomNumberForBiceps = GetRandomNumbers(bicepsExercises.Count(), 3);
@@ -356,248 +367,80 @@ namespace FitLife.Services
 
             return listNumbers;
         }
+        //public async Task<List<Training>> AddPriorityExercise(List<Training> trainingPlan, string priorityPart)
+        //{
+        //    foreach (Training t in trainingPlan)
+        //    {
+        //        if (t.TrainingExercises.Any(x => x.Exercise.PartOfBody.Name == priorityPart))
+        //        {
+        //            foreach (Exercise e in await trainingRepository.GetExercises())
+        //            {
+        //                if (!(t.TrainingExercises.Any(x => x.Exercise.Id == e.Id)) && e.PartOfBody.Name == priorityPart)
+        //                {
+        //                    TrainingExercise te = new TrainingExercise
+        //                    {
+        //                        TrainingId = t.Id,
+        //                        Training = t,
+        //                        Exercise = e,
+        //                        ExerciseId = e.Id
+        //                    };
+        //                    t.TrainingExercises.Add(te);
+        //                    await trainingRepository.AddTrainingExercise(te);
+        //                    goto BreakLoops;
+                            
+        //                }
+        //            }
+        //        }
+        //    }
+        //    BreakLoops:
+        //    return trainingPlan;
+        //}
 
-        
-
-public async Task addData()
+        public async Task<List<Training>> GetTrainingPlan()
         {
-            List<Exercise> list2 = new List<Exercise>();
-            Exercise e1 = new Exercise
+            var user = await accountRepository.GetCurrentUser();
+            return (trainingRepository.GetTrainingList(user.Id)).ToList();
+        }
+        public async Task<List<Training>> updateTraining()
+        {
+            int breakTime = 0;
+            var user = await accountRepository.GetCurrentUser();
+            var training = await trainingRepository.GetTraining(user.Id);
+            trainingRepository.SetTrainingStatus(user.Id);
+            List<Training> trainingPlanList = new List<Training>();
+
+            if (training.IsBegginer == true)
             {
-                Name = "Wypuchanie nógi w góre na maszynie smith",
-                PartOfBody = trainingRepository.getPartOfBodyId("Pośladki")
+                breakTime = 90;
+                var trainingPlan = await GetReadyTrainingPlan(4, breakTime, user, training.PriorityPart);
+                trainingPlanList = trainingPlan.ToList();
+            }
+            else if (training.IsIntermediate == true || training.IsAdvanced == true)
+            {
+                breakTime = 60;
+                var trainingPlan = await GetReadyTrainingPlan(5, breakTime, user, training.PriorityPart);
+                trainingPlanList = trainingPlan.ToList();
+            }
 
-            };
-            //Exercise e2 = new Exercise
+            //if (training.PriorityPart != null)
             //{
-            //    Name = "Spięcia brzucha leżąc",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Brzuch")
-            //};
-            //Exercise e3 = new Exercise
-            //{
-            //    Name = "Unoszenie nóg w zwisie",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Brzuch")
-            //};
-            //Exercise e4 = new Exercise
-            //{
-            //    Name = "Scyzoryk leżąc",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Brzuch")
-            //};
-            //Exercise e5 = new Exercise
-            //{
-            //    Name = "Świeca leżać na ławce skośnej w dół",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Brzuch")
-            //};
-
-            list2.Add(e1);
-
-
-
-            //Exercise e6 = new Exercise
-            //{
-            //    Name = "Uginanie rąk z supinacją",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Biceps")
-            //};
-            //Exercise e7 = new Exercise
-            //{
-            //    Name = "Uginanie rąk z uchwytem młotkowym",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Biceps")
-            //};
-            //Exercise e8 = new Exercise
-            //{
-            //    Name = "Uginanie rąk ze sztangą stojąc",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Biceps")
-            //};
-            //Exercise e9 = new Exercise
-            //{
-            //    Name = "Uginanie rąk ze sztangą na modlitewniku",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Biceps")
-            //};
-            //Exercise e10 = new Exercise
-            //{
-            //    Name = "Podciąganie na drążku wąskim uchwytem",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Biceps")
-            //};
-
-
-
-            //Exercise e11 = new Exercise
-            //{
-            //    Name = "Wyciskanie sztangi wąskim uchwytem",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Triceps")
-            //};
-            //Exercise e12 = new Exercise
-            //{
-            //    Name = "Ściąganie linki z góry wąskim uchwytem",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Triceps")
-
-            //};
-            //Exercise e13 = new Exercise
-            //{
-            //    Name = "Ściąganie linki z góry przy użyciu sznura",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Triceps")
-            //};
-            //Exercise e14 = new Exercise
-            //{
-            //    Name = "Odwrotne popmki na ławce",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Triceps")
-            //};
-            //Exercise e15 = new Exercise
-            //{
-            //    Name = "Prostowanie rąk na maszynie hammer",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Triceps")
-            //};
-
-
-            //Exercise e16 = new Exercise
-            //{
-            //    Name = "Wyciskanie sztangi leżac na ławce płaskiej",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Klatka piersiowa")
-            //};
-            //Exercise e17 = new Exercise
-            //{
-            //    Name = "Wyciskanie hantli leżąc na ławce skośnej w góre",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Klatka piersiowa")
-            //};
-            //Exercise e18 = new Exercise
-            //{
-            //    Name = "Rozpiętki na bramie",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Klatka piersiowa")
-            //};
-            //Exercise e19 = new Exercise
-            //{
-            //    Name = "Wyciskanie hantli leżąc na ławce skośnej w dół",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Klatka piersiowa")
-            //};
-            //Exercise e20 = new Exercise
-            //{
-            //    Name = "Wyciskanie szerokim uchwytem na maszynie hammer",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Klatka piersiowa")
-            //};
-
-
-
-
-            //Exercise e21 = new Exercise
-            //{
-            //    Name = "Wyciskanie hantli siedząc",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Ramiona")
-            //};
-            //Exercise e22 = new Exercise
-            //{
-            //    Name = "Face pull",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Ramiona")
-            //};
-            //Exercise e23 = new Exercise
-            //{
-            //    Name = "Wznoszenie hantli bokiem",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Ramiona")
-            //};
-            //Exercise e24 = new Exercise
-            //{
-            //    Name = "Wznoszenie hantli przodem",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Ramiona")
-            //};
-            //Exercise e25 = new Exercise
-            //{
-            //    Name = "Wznoszenie sztangi przodem",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Ramiona")
-            //};
-
-
-
-            //Exercise e26 = new Exercise
-            //{
-            //    Name = "Przysiady ze sztangą",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Nogi")
-            //};
-            //Exercise e27 = new Exercise
-            //{
-            //    Name = "Prostawnie nóg na maszynie",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Nogi")
-            //};
-            //Exercise e28 = new Exercise
-            //{
-            //    Name = "Uginanie nóg na maszynie",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Nogi")
-            //};
-            //Exercise e29 = new Exercise
-            //{
-            //    Name = "Martwy ciąg na prostych nogach",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Nogi")
-            //};
-            //Exercise e30 = new Exercise
-            //{
-            //    Name = "Wykroki chodzone z kettlami",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Nogi")
-            //};
-
-
-            //Exercise e31 = new Exercise
-            //{
-            //    Name = "Przysiady sumo",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Pośladki")
-            //};
-            //Exercise e32 = new Exercise
-            //{
-            //    Name = "Zakroki na stepie",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Pośladki")
-            //};
-            //Exercise e33 = new Exercise
-            //{
-            //    Name = "Bułgarski przysiad",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Pośladki")
-            //};
-            //Exercise e34 = new Exercise
-            //{
-            //    Name = "Hip thrust",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Pośladki")
-            //};
-            //Exercise e35 = new Exercise
-            //{
-            //    Name = "Obwodziciele na maszynie stojąc",
-            //    PartOfBody = trainingRepository.getPartOfBodyId("Pośladki")
-            //};
-
-
-            //list2.Add(e1);
-            //list2.Add(e2);
-            //list2.Add(e3);
-            //list2.Add(e4);
-            //list2.Add(e5);
-            //list2.Add(e6);
-            //list2.Add(e7);
-            //list2.Add(e8);
-            //list2.Add(e9);
-            //list2.Add(e10);
-            //list2.Add(e11);
-            //list2.Add(e12);
-            //list2.Add(e13);
-            //list2.Add(e14);
-            //list2.Add(e15);
-            //list2.Add(e16);
-            //list2.Add(e17);
-            //list2.Add(e18);
-            //list2.Add(e19);
-            //list2.Add(e20);
-            //list2.Add(e21);
-            //list2.Add(e22);
-            //list2.Add(e23);
-            //list2.Add(e24);
-            //list2.Add(e25);
-            //list2.Add(e26);
-            //list2.Add(e27);
-            //list2.Add(e28);
-            //list2.Add(e29);
-            //list2.Add(e30);
-            //list2.Add(e31);
-            //list2.Add(e32);
-            //list2.Add(e32);
-            //list2.Add(e34);
-            //list2.Add(e35);
-
-            await trainingRepository.AddData(list2);
+            //    var result = await AddPriorityExercise(trainingPlanList, training.PriorityPart);
+            //    await trainingRepository.Save();
+            //    return result;
+            //}
             await trainingRepository.Save();
+            return trainingPlanList;
+        }
+        public async Task<int> GetNumberOfTrainings()
+        {
+            var user = await accountRepository.GetCurrentUser();
+
+            return trainingRepository.GetQunatityOfTrainings(user.Id);
+        }
+
+        public IEnumerable<Exercise> GetExercises()
+        {
+            return trainingRepository.GetExercises();
         }
 
     }

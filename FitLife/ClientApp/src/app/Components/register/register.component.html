@@ -1,9 +1,13 @@
+<div class="image" style="width: 100vw; height: 100vh; position: fixed; top:20;  left: 0;">
+
+</div>
 <div class="container">
 
+
   <div *ngIf="formError" class="alert alert-danger" role="alert">
-   Bład przy wprowadzaniu danych, wypełnij dane raz jeszcze !
+    Bład przy wprowadzaniu danych, wypełnij dane raz jeszcze !
   </div>
-  
+
   <div class="row">
     <div class="col-xl-6 offset-xl-4">
       <h1 style="color:white; font-size: 70px">Zarejestruj się</h1>
@@ -11,7 +15,7 @@
   </div>
 
   <form [formGroup]="registerForm" (ngSubmit)="register()">
-    <div class="col-xl-7 offset-xl-3" style="margin-top: 150px">
+    <div class="col-xl-7 offset-xl-3" style="margin-top: 90px">
       <div class="input-group input-group-lg">
         <span class="input-group-addon">
           <i style="color: white" class="fa fa-envelope fa-4x"></i>
@@ -24,7 +28,8 @@
         <span class="input-group-addon">
           <i style="color: white" class="fa fa-user fa-4x"></i>
         </span>
-        <input type="text" class="form-control" formControlName="userName" placeholder="Nazwa użytkownika" required>
+        <input type="text" style="margin-left: 18px" class="form-control" formControlName="userName" placeholder="Nazwa użytkownika"
+          required>
       </div>
     </div>
     <div class="col-xl-7 offset-xl-3" style="margin-top: 15px">
@@ -40,19 +45,25 @@
         <span class="input-group-addon">
           <i style="color: white" class="fa fa-key fa-4x"></i>
         </span>
-        <input type="password" class="form-control" formControlName="repeatPassword" placeholder="Potwórz hasło"
-          required>
+        <input type="password" class="form-control" formControlName="repeatPassword" placeholder="Potwórz hasło" required>
       </div>
     </div>
     <div class="row" class="col-xl-7 offset-xl-3" style="margin-top: 15px">
-      <select class="form-control" formControlName="selectedGender" [(ngModel)]="selectedGenderValue" (ngModelChange)="onChangeGender($event)" required>
-        <option value="" selected disabled>Wybierz płeć</option>
-        <option *ngFor="let g of gender" [ngValue]="g">{{g.name}}</option>
-      </select>
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <i style="color: white" class="fa fa-mars fa-3x"></i>
+        </span>
+        <select style="margin-left: 20px" class="form-control" formControlName="selectedGender" [(ngModel)]="selectedGenderValue" (ngModelChange)="onChangeGender($event)"
+          required>
+          <option *ngFor="let g of gender" [ngValue]="g">{{g.name}}</option>
+        </select>
+      </div>
     </div>
-    <div class="row">
-      <div class="col-xl-2 offset-xl-9" style="margin-top: 15px">
-        <button class="btn btn-primary" [disabled]="registerForm.invalid" type="submit" (click)="register()">Zarejestruj</button>
+    <div class="row" class="col-xl-7 offset-xl-3">
+      <div style="margin-top: 15px">
+          <div class="input-group input-group-lg">
+        <button class="btn btn-primary" [disabled]="registerForm.invalid" type="submit" (click)="register()">Zarejestruj się</button>
+      </div>
       </div>
     </div>
   </form>

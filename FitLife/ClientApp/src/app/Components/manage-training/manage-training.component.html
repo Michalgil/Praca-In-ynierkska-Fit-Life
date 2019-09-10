@@ -1,0 +1,63 @@
+<div class="image" style="width: 100vw; height: 100vh; position: fixed; top:20;  left: 0;">
+
+    <div class="row">
+      <div class="col-xl-5 offset-xl-4">
+        <div class="col-xl-3 offset-xl-9">
+          <nav class="navbar" style="display: inline;">
+            <input class="form-control" type="text" name="search" placeholder="Wyszukaj" [(ngModel)]="filter">
+            <button class="btn btn-primary" type="submit"  (click)="openModal(Dialog)">Dodaj</button>
+          </nav>
+        </div>
+        <table class="table table-striped" style="background-color: white">
+          <thead>
+            <tr>
+              <th>Nazwa ćwiczenia</th>
+              <th>Partia</th>
+              <th>Zarządzaj</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ex of exerciseList | filter:filter | paginate: { itemsPerPage: 5, currentPage: p }; let i = index">
+              <th>{{ex.Name}}</th>
+              <td>{{ex.Category}}</td>
+              <td>
+                <button class="btn btn-danger" type="submit" (click)="Remove(ex)">Usuń</button>
+              </td>
+            </tr>
+          </tbody>
+          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </table>
+      </div>
+    </div>
+  
+  </div>
+  
+  
+  <ng-template #Dialog>
+      <div class="modal-header">
+          <h4 class="modal-title pull-left">
+            <b style="font-size: 30px">Dodaj ćwoczenie</b>
+          </h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+          <label >Partia</label>
+          <select class="custom-select"  (change)="selectChangeHandler($event)">
+            <option value="Klatka piersiowa">Klatka piersiowa</option>
+            <option value="Plecy">Plecy</option>
+            <option value="Biceps">Biceps</option>
+            <option value="Triceps">Triceps</option>
+            <option value="Nogi">Nogi</option>
+            <option value="Pośladki">Pośladki</option>
+            <option value="Brzuch">Brzuch</option>
+            <option value="Ramiona">Ramiona</option>
+          </select>
+          <div class="form-group">
+              <label for="waist">Nazwa ćwiczenia</label>
+              <input type="text" class="form-control" id="productName" [(ngModel)]="exName">
+          </div>
+              <button class="btn btn-primary btn-lg" type="submit" (click)="modalRef.hide()" (click)="AddExercise()">Dodaj</button>
+      </div>
+    </ng-template>

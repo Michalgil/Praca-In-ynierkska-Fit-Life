@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FitLife.Data
+namespace FitLife.ViewModels
 {
-    public interface IApiContext
+    public class MessageJson
     {
+        public string Message { get; set; }
     }
 }

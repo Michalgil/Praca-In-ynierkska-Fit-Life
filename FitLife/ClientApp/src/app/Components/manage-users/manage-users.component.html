@@ -1,0 +1,31 @@
+<div class="image" style="width: 100vw; height: 100vh; position: fixed; top:20;  left: 0;">
+
+    <div class="row">
+      <div class="col-xl-5 offset-xl-4">
+        <div class="col-xl-3 offset-xl-9">
+          <nav class="navbar" style="display: inline;">
+            <input class="form-control" type="text" name="search" placeholder="Wyszukaj" [(ngModel)]="filter">
+          </nav>
+        </div>
+        <table class="table table-striped" style="background-color: white">
+          <thead>
+            <tr>
+              <th>Nazwa uzytkownika</th>
+              <th>Email</th>
+              <th>Zarządzaj</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of userList | filter:filter | paginate: { itemsPerPage: 5, currentPage: p }; let i = index">
+              <th>{{user.Name}}</th>
+              <td>{{user.Email}}</td>
+              <td>
+                <button class="btn btn-danger" type="submit" (click)="Remove(user)">Usuń</button>
+              </td>
+            </tr>
+          </tbody>
+          <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </table>
+      </div>
+    </div>
+  </div>

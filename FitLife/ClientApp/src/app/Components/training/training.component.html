@@ -1,10 +1,12 @@
+<div class="image" style="width: 100vw; height: 100vh; position: fixed; top:20;  left: 0;"> 
+
+  </div>
 <div *ngIf="formError" class="alert alert-danger" role="alert">
   Bład przy wprowadzaniu danych, wypełnij dane raz jeszcze !
 </div>
-
 <div *ngIf="crateTrainingForm">
   <form [formGroup]="trainingForm" (ngSubmit)="createTraning()">
-    <div class="form-group" class="col-xl-7 offset-xl-3" style="margin-top: 15px">
+    <div class="form-group" class="col-xl-7 offset-xl-3" >
       <label style="color: white">Partia na której Nam zależy</label>
       <select class="custom-select" formControlName="priorityPart" title="Jeżeli zależy Ci na rozbudowaniu partii w której masz największe braki to proszę wybrać z listy tą partie">
         <option value="Klatka piersiowa">Klatka piersiowa</option>
@@ -34,77 +36,83 @@
 
 <div *ngIf="!crateTrainingForm">
 
-  <div *ngIf="trainingPlan.length == 3">
+  <div *ngIf="trainingPlan.length == 6 || trainingPlan.length == 3">
     <div class="col-xl-7 offset-xl-3">
       <div class="list-group">
         <button type="button" class="list-group-item list-group-item-action active" aria-disabled="true">
           <p style="font-size: 25px; text-align: center">Twój trening</p>
         </button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(0)">Plecy + biceps</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(1)">Klatka piersiowa + ramiona + triceps</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)" *ngIf="trainingPlan[2].ApplicationUser.isMale == true">Nogi</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)" *ngIf="trainingPlan[2].ApplicationUser.isMale == false">Nogi + pośladki</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(0)"><b>Trening 1</b> - Plecy + biceps</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(1)"><b>Trening 2</b> - Klatka piersiowa + ramiona + triceps</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)" *ngIf="trainingPlan[2].ApplicationUser.isMale == true"><b>Trening 3</b> - Nogi</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)" *ngIf="trainingPlan[2].ApplicationUser.isMale == false"><b>Trening 3</b> - Nogi + pośladki</button>
       </div>
     </div>
 
-    <!-- <table class="table">
-      <thead class="thead-dark">
-        <tr>
-          <th>Nazwa partii</th>
-          <th>Ćwiczenie</th>
-          <th>Ilosc serii x powtórzeń</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let exercise of trainingPlan[numberOfTraining].TrainingExercises">
-          <td>{{exercise.Name}}</td>
-          <td>Doe</td>
-          <td>john@example.com</td>
-        </tr>
-        <tr>
-          <td>Mary</td>
-          <td>Moe</td>
-          <td>mary@example.com</td>
-        </tr>
-        <tr>
-          <td>July</td>
-          <td>Dooley</td>
-          <td>july@example.com</td>
-        </tr>
-      </tbody>
-    </table> -->
-
   </div>
 
-  <div *ngIf="trainingPlan.length == 4">
+  <div *ngIf="trainingPlan.length == 8 || trainingPlan.length == 4">
     <div class="col-xl-7 offset-xl-3">
       <div class="list-group">
         <button type="button" class="list-group-item list-group-item-action active" aria-disabled="true">
           <p style="font-size: 25px; text-align: center">Twój trening</p>
         </button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(0)">Plecy + brzuch</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(1)">Biceps + triceps</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)">Klatka piersiowa + ramiona</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(3)" *ngIf="trainingPlan[3].ApplicationUser.isMale == true">Nogi</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(3)" *ngIf="trainingPlan[3].ApplicationUser.isMale == false">Nogi + pośladki</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(0)"><b>Trening 1</b> - Plecy + brzuch</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(1)"><b>Trening 2</b> - Biceps + triceps</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)"><b>Trening 3</b> - Klatka piersiowa + ramiona</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(3)" *ngIf="trainingPlan[3].ApplicationUser.isMale == true"><b>Trening 4</b> - Nogi</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(3)" *ngIf="trainingPlan[3].ApplicationUser.isMale == false"><b>Trening 4</b> - Nogi + pośladki</button>
       </div>
     </div>
   </div>
 
-  <div *ngIf="trainingPlan.length == 5">
+  <div *ngIf="trainingPlan.length == 10 || trainingPlan.length == 5">
     <div class="col-xl-7 offset-xl-3">
       <div class="list-group">
         <button type="button" class="list-group-item list-group-item-action active" aria-disabled="true">
           <p style="font-size: 25px; text-align: center">Twój trening</p>
         </button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(0)">Plecy + brzuch</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(1)">Biceps + triceps</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)">Klatka piersiowa</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(3)">Ramiona + brzuch</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(4)" *ngIf="trainingPlan[4].ApplicationUser.isMale == true">Nogi</button>
-        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(4)" *ngIf="trainingPlan[4].ApplicationUser.isMale == false">Nogi + pośladki</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(0)"><b>Trening 1</b> - Plecy + brzuch</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(1)"><b>Trening 2</b> - Biceps + triceps</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(2)"><b>Trening 3</b> - Klatka piersiowa</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(3)"><b>Trening 4</b> - Ramiona + brzuch</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(4)" *ngIf="trainingPlan[4].ApplicationUser.isMale == true"><b>Trening 5</b> - Nogi</button>
+        <button type="button" class="list-group-item list-group-item-action" (click)="setTraining(4)" *ngIf="trainingPlan[4].ApplicationUser.isMale == false"><b>Trening 6</b> - Nogi + pośladki</button>
       </div>
     </div>
   </div>
+
+  <div *ngIf="showTraining">
+      <div class="col-xl-6 offset-xl-5">
+        <h1 style="color:white; font-size: 50px">Trening {{counter}}</h1>
+      </div>
+      <div class="col-xl-10 offset-xl-2">
+        <table class="table table-striped table-dark">
+          <thead>
+            <tr>
+              <th>Nr cwiczenia</th>
+              <th>Pracująca partia</th>
+              <th>Ćwiczenie</th>
+              <th>Ilość serii x ilość powtórzeń</th>
+              <th>Przerwa pomiędzy seriami</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let exercise of trainingPlan[numberOfTraining].TrainingExercises; let i = index">
+              <th>{{i + numberOfExercise}}</th>
+              <td>{{exercise.Exercise.PartOfBody.Name}}</td>
+              <td>{{exercise.Exercise.Name}}</td>
+              <td *ngIf="trainingPlan[numberOfTraining].IsBegginer == true">3x12 12/12/12</td>
+              <td *ngIf="trainingPlan[numberOfTraining].IsIntermediate == true">4x10 10/10/10/10</td>
+              <td *ngIf="trainingPlan[numberOfTraining].IsAdvanced == true">4x8 8/8/8/8</td>
+              <td>{{trainingPlan[numberOfTraining].Break}} s</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+  </div>
+
+
 
 </div>

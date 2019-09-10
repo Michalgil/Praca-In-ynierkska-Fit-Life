@@ -2,7 +2,6 @@ import { TrainingService } from './../../services/Training/training.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { TrainingData } from '../../Models/training.data';
-
 @Component({
   selector: 'app-training',
   templateUrl: './training.component.html',
@@ -12,6 +11,9 @@ export class TrainingComponent implements OnInit {
   trainingForm: FormGroup;
   formError: boolean;
   crateTrainingForm: boolean;
+  showTraining: boolean;
+  counter: number;
+  numberOfExercise: number;
   trainingPlan: any[] = [];
   numberOfTraining: number;
 
@@ -22,10 +24,10 @@ export class TrainingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.numberOfExercise = 1;
     this.crateTrainingForm = true;
     this.createTrainingForm();
-
-
+    this.getTraining();
   }
 
   createTrainingForm(){
@@ -45,6 +47,23 @@ export class TrainingComponent implements OnInit {
       });
   }
 
+  getTraining(){
+    this.trainingService
+      .getTraining()
+      .subscribe(result => {
+        if(result.length > 0){
+          this.crateTrainingForm = false;
+          this.trainingPlan = result;
+          console.log(result);
+        }
+        else{
+          this.crateTrainingForm = true;
+        }  
+      }, error => {
+        console.log(error);
+      });
+  }
+
   getTrainingtDataFromForm(): TrainingData{
     const trainingModel = this.trainingForm.value;
 
@@ -52,7 +71,9 @@ export class TrainingComponent implements OnInit {
   }
 
   setTraining(numberOfTraining: number){
+    this.showTraining = true;
     this.numberOfTraining = numberOfTraining;
+    this.counter = numberOfTraining += 1;
     console.log(this.trainingPlan[this.numberOfTraining]);
   }
 

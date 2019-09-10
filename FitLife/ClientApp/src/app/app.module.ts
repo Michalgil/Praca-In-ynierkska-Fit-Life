@@ -21,6 +21,13 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import {CarouselModule} from 'ngx-bootstrap/carousel';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ProgressService } from './services/Progress/progress.service';
+import { ManageDietComponent } from './Components/manage-diet/manage-diet.component';
+import { ManageTrainingComponent } from './Components/manage-training/manage-training.component';
+import { ManageUsersComponent } from './Components/manage-users/manage-users.component';
+
 
 @NgModule({
   declarations: [
@@ -32,22 +39,28 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     TrainingComponent,
     ProgressComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ManageDietComponent,
+    ManageTrainingComponent,
+    ManageUsersComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    CarouselModule,
     NgxPaginationModule,
     Ng2SearchPipeModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ModalModule.forRoot()
   ],
   providers: [
     AccountService,
     DietService,
     ProductService,
     TrainingService,
+    ProgressService,
     AuthGuard
   ],
   bootstrap: [AppComponent]

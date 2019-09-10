@@ -1,6 +1,7 @@
 ﻿using FitLife.Data;
 using FitLife.Models;
 using FitLife.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace FitLife.DAL
 {
@@ -77,6 +80,10 @@ namespace FitLife.DAL
 
             return await userManager.FindByIdAsync(userId);
         }
+        public async Task SignOut()
+        {
+            await httpContextAccessor.HttpContext.SignOutAsync();
+        }
         private string GenerateJwtToken(string email, ApplicationUser user)
         {
             var claims = new List<Claim>
@@ -96,10 +103,52 @@ namespace FitLife.DAL
              signingCredentials: creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
-        public async Task SignOut()
+        public List<ApplicationUser> GetAllUsers()
         {
-            
+            var usersList = userManager.Users.ToList();
+
+            if (usersList == null)
+            {
+                return null;
+            }
+
+            return usersList;
+
+        }
+        public async Task<bool> RemoveUser(string id)
+        {
+            var user = userManager.Users.Where(u => u.Id == id).FirstOrDefault();
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            await userManager.DeleteAsync(user);
+            return true;
+        }
+
+        public bool SendDiet(string meal)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Fit Life", "kalapitus16@gmail.com"));
+            message.To.Add(new MailboxAddress("michal", "gil.michal94@gmail.com"));
+
+            message.Subject = "Plan żywieniowy";
+            message.Body = new TextPart("plain")
+            {
+                Text = meal
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Timeout = 10000;
+                client.Connect("smtp.gmail.com", 587, false);
+                client.Authenticate("kalapitus16@gmail.com", "0172bbbb");
+                client.Send(message);
+                client.Disconnect(true);
+            }
+                return true;
         }
         private bool disposed = false;
         protected virtual void Dispose(bool disposing)

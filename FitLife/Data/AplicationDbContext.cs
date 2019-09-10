@@ -1,15 +1,11 @@
 ﻿using FitLife.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace FitLife.Data
 {
-    public class AplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationUserRole, string>
+    public class AplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationUserRole, string>, IAplicationDbContext
     { 
         public DbSet<Product> Products { get; set; }
         public DbSet<Meal> Meals { get; set; }
@@ -18,6 +14,7 @@ namespace FitLife.Data
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<PartOfBody> PartsOfBody { get; set; }
         public DbSet<TrainingExercise> TrainingExercises { get; set; }
+        public DbSet<Dimensions> Dimensions { get; set; }
         public AplicationDbContext(DbContextOptions<AplicationDbContext> options) : base(options)
         {
 
@@ -68,6 +65,10 @@ namespace FitLife.Data
                 .ToTable("Training");
             modelBuilder.Entity<Training>()
                 .HasKey(t => t.Id);
+            modelBuilder.Entity<Training>()
+                .HasOne(t => t.ApplicationUser)
+                .WithMany(au => au.trainings)
+                .HasForeignKey(t => t.ApplicationUserId);
 
             modelBuilder.Entity<Exercise>()
                 .ToTable("Exercise");
@@ -82,9 +83,20 @@ namespace FitLife.Data
                  .HasMany(p => p.Exercises)
                  .WithOne(e => e.PartOfBody);
 
-
-
+            modelBuilder.Entity<Dimensions>()
+                .ToTable("Dimensions");
+            modelBuilder.Entity<Dimensions>()
+                .HasKey(d => d.Id);
+            modelBuilder.Entity<Dimensions>()
+                .HasOne(d => d.ApplicationUser)
+                .WithMany(au => au.Dimensions)
+                .HasForeignKey(d => d.ApplicationUserId);
 
         }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
+        //{
+        //    optionBuilder.UseLazyLoadingProxies();
+        //}
     }
 }

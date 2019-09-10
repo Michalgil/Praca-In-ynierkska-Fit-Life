@@ -12,7 +12,10 @@ namespace FitLife.DAL
     {
         Task<String> Login(LoginJson loginModel);
         Task<String> Register(RegisterJson registerJson);
-        Task SignOut();
         Task<ApplicationUser> GetCurrentUser();
+        bool SendDiet(string message);
+        List<ApplicationUser> GetAllUsers();
+        Task<bool> RemoveUser(string id);
+        Task SignOut();
     }
 }

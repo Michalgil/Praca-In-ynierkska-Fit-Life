@@ -12,7 +12,10 @@ namespace FitLife.ViewModels
         public double Age { get; set; }
         public double DailyActivity { get; set; }
         public double DietTarget { get; set; }
-        public Boolean IsMale { get; set; }
-
+        public float Arms { get; set; }
+        public float Chest { get; set; }
+        public float Thig { get; set; }
+        public float Waist { get; set; }
+        public float Buttocks { get; set; }
     }
 }

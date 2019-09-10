@@ -1,3 +1,76 @@
-<p>
-  progress works!
-</p>
+<div class="image" style="width: 100vw; height: 100vh; position: fixed; top:20;  left: 0;">
+
+</div>
+<!-- <div *ngIf="counter == 2"> -->
+
+  <form [formGroup]="progressForm" (ngSubmit)="sendData()">
+
+    <div class="row">
+      <div class="col-xl-7 offset-xl-5" style="margin-top: 30px">
+        <p style="color:white; font-size: 40px; font-style: italic">Twoja obecna dieta: {{dietData.Kcal}} kcal</p>
+      </div>
+      <div class="col-xl-7 offset-xl-5" style="margin-top: 15px">
+        <p style="color:white; font-size: 40px; font-style: italic">Twoj cel diety: {{target}}</p>
+      </div>
+      <div class="col-xl-7 offset-xl-5" style="margin-top: 15px">
+        <p style="color:white; font-size: 40px; font-style: italic">Ilość treningów w tygodniu: {{numberOfTraining}}</p>
+      </div>
+      <div class="form-group" class="col-xl-5 offset-xl-5" style="margin-top: 15px">
+        <label style="color: white">Wybierz cel diety</label>
+        <select class="custom-select" formControlName="dietTarget" (change)="selectChangeHandler($event)">
+          <option value="0">Utrzymanie wagi</option>
+          <option value="2">Nabranie wagi</option>
+          <option value="1">Redukcja wagi</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-xl-7 offset-xl-5">
+      <div style="margin-top: 5px;">
+        <p style="color:white; font-size: 40px; font-style: italic">Ramiona: {{dimensions.Arms}}cm</p>
+        <input type="number" class="form-control" name="arms" placeholder="Ramiona w cm" formControlName="arms" required>
+      </div>
+      <div style="margin-top: 5px">
+        <p style="color:white; font-size: 40px; font-style: italic">Klatka piersiowa: {{dimensions.Chest}}cm</p>
+        <input type="number" class="form-control" name="chest" placeholder="Klatka piersiowa w cm" formControlName="chest" required>
+      </div>
+      <div style="margin-top: 5px">
+        <p style="color:white; font-size: 40px; font-style: italic">Uda: {{dimensions.Thig}}cm</p>
+        <input type="number" class="form-control" name="this" placeholder="Uda w c" formControlName="thig" required>
+      </div>
+      <div style="margin-top: 5px">
+        <p style="color:white; font-size: 40px; font-style: italic">Talia: {{dimensions.Waist}}cm</p>
+        <input type="number" class="form-control" name="waist" placeholder="Talia w cm" formControlName="waist" required>
+      </div>
+      <div style="margin-top: 5px">
+        <p style="color:white; font-size: 40px; font-style: italic">Pośladki: {{dimensions.Buttocks}}cm</p>
+        <input class="col-xl-3 offset-xl-5" type="number" name="buttocks" class="form-control" placeholder="Pośladki w cm" formControlName="buttocks" required>
+      </div>
+      <div style="margin-top: 5px">
+        <p style="color:white; font-size: 40px; font-style: italic">Waga: {{weight}}kg</p>
+        <input class="col-xl-3 offset-xl-5" type="number" name="buttocks" class="form-control" placeholder="Waga" formControlName="weight" required>
+      </div>
+      <div style="margin-top: 5px">
+        <button class="btn btn-danger btn-lg" type="submit" [disabled]="progressForm.invalid" type="submit" (click)="sendData()" (click)="openModal(success)">Zapisz pomiary</button>
+      </div>
+    </div>
+  </form>
+<!-- </div> -->
+
+
+
+<ng-template #success>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <b>Twoja dieta i treining zostały zaktualizowane na podstawie nowych danych.</b>
+    </h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <button type="submit" class="btn btn-danger" (click)="goToDietView()" (click)="modalRef.hide()">Dieta</button>
+    <button type="submit" class="btn btn-danger" (click)="goToDTrainingView()" (click)="modalRef.hide()">Trening</button>
+  </div>
+
+</ng-template>

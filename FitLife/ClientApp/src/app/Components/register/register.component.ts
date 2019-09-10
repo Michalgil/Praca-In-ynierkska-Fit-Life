@@ -13,6 +13,7 @@ import * as $ from 'jquery';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
+  showSuccessMsg: boolean;
   formError: boolean;
   gender = [
     {id: 1, isMale: true, name: "Mężczyzna"},
@@ -43,6 +44,7 @@ export class RegisterComponent implements OnInit {
     this.accountService
     .register(this.getDataFromForm())
     .subscribe(result =>{
+      this.showSuccessMsg = true;
       this.router.navigate(['/login'])
     }, error => {
       this.formError = true;

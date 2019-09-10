@@ -13,4 +13,17 @@ export class TrainingService {
     return this.http.post<any>("https://localhost:44348/api/Training/createTraining",trainingData);
   }
 
+  getTraining(): Observable<any>{
+    return this.http.get<any>("https://localhost:44348/api/Training/getTraining");
+  }
+  getQunatityoFTrainings(): Observable<any>{
+    return this.http.get<any>("https://localhost:44348/api/Training/quantitytOfTrainings");
+  }
+  updateTraining(): Observable<any>{
+    return this.http.get<any>("https://localhost:44348/api/Training/updateTraining");
+  }
+
+  getExercises(): Observable<any>{
+    return this.http.get<any>("https://localhost:44348/api/Training/getExercises");
+  }
 }

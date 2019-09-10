@@ -27,7 +27,6 @@ namespace FitLife.Api
         [HttpPost("createDiet")]
         public async Task<IActionResult> CreateDiet([FromBody] DietDataJson dietData)
         {
-            dietData.IsMale = true;
             var diet = await dietService.CreateDiet(dietData);
             if (diet == null)
             {
@@ -43,11 +42,13 @@ namespace FitLife.Api
         public async Task<IActionResult>  GetCurrentDiet()
         {
             var diet = await dietService.GetDiet();
-            if(diet == null)
+            if (diet != null)
             {
-                return NotFound();
+                return Ok(diet);
             }
-            return Ok(diet);
+
+            return Ok();
+            
         }
         [HttpGet("getAllProducts")]
         public async Task<ActionResult> GetAllProducts()
@@ -58,6 +59,55 @@ namespace FitLife.Api
                 return BadRequest();
             }
             return Ok(new { product = products });
+        }
+        [HttpPost("updateDiet")]
+        public async Task<ActionResult> UpdateDiet([FromBody] DietDataJson dietData)
+        {
+            var diet = await dietService.UpdateDiet(dietData);
+            if (diet == null)
+            {
+                return BadRequest();
+            }
+            return Ok(diet.ApplicationUserId);
+        }
+        [HttpGet("getDimensions")]
+        public async Task<ActionResult> GetDimensions()
+        {
+            var dimensions = await dietService.GetDimensions();
+            if (dimensions == null)
+            {
+                return BadRequest();
+            }
+            return Ok(dimensions);
+        }
+
+        [HttpPost("removeProducts")]
+        public async Task<ActionResult> RemoveProducts([FromBody] int id)
+        {
+            try
+            {
+                await dietService.RemoveProduct(id);
+                return Ok();
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
+            
+        }
+        [HttpPost("addProduct")]
+        public async Task<ActionResult> AddProduct([FromBody] ProductJson product)
+        {
+            try
+            {
+                await dietService.AddProduct(product);
+                return Ok();
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
+
         }
     }
 }

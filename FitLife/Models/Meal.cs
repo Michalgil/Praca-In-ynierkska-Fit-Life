@@ -15,7 +15,7 @@ namespace FitLife.Models
         public int Carbohydrates { get; set; }
 
         public int DietId { get; set; }
-        public Diet Diet { get; set; }
+        public virtual Diet Diet { get; set; }
         
     }
 }

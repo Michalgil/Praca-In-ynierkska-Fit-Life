@@ -13,5 +13,6 @@ namespace FitLife.Models
         public virtual ICollection<Training> trainings { get; set; }
 
         public virtual ICollection<Diet> Diets { get; set; }
+        public virtual ICollection<Dimensions> Dimensions { get; set; }
     }
 }

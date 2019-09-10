@@ -24,13 +24,55 @@ namespace FitLife.Api
         public async Task<IActionResult> CreateTrening([FromBody] TrainingDataJson trainingData)
         {
             var trainingPlan = await trainingService.CreateTrainingPlan(trainingData);
-
             if(trainingPlan == null)
             {
                 return new BadRequestResult();
             }
             return Ok(trainingPlan);
         }
-        
+        [HttpGet("getTraining")]
+        public async Task<IActionResult> GetTraining()
+        {
+            var trainingPlan = await trainingService.GetTrainingPlan();
+            if (trainingPlan == null)
+            {
+                return new BadRequestResult();
+            }
+            return Ok(trainingPlan);
+        }
+        [HttpGet("quantitytOfTrainings")]
+        public async Task<IActionResult> GetQunatityOfTrainings()
+        {
+            try
+            {
+                var quantity = await trainingService.GetNumberOfTrainings();
+                return Ok(quantity);
+            }
+            catch
+            {
+                return new BadRequestResult();
+            }
+        }
+        [HttpGet("updateTraining")]
+        public async Task<IActionResult> UpdateTraining()
+        {
+            var trainingPlan = await trainingService.updateTraining();
+            if (trainingPlan.Count() == 0)
+            {
+                return new BadRequestResult();
+            }
+            return Ok(trainingPlan);
+        }
+        [HttpGet("getExercises")]
+        public IActionResult GetExercises()
+        {
+            var exercisesList = trainingService.GetExercises();
+            if (exercisesList.Count() == 0)
+            {
+                return new BadRequestResult();
+            }
+            return Ok(exercisesList);
+        }
+
     }
 }

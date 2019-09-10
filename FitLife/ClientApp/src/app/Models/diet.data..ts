@@ -5,6 +5,10 @@ export class DietData{
         public age: number,
         public dailyActivity: number,
         public dietTarget: number,
-        public gender: boolean
+        public arms: number,
+        public waist: number,
+        public thig: number,
+        public chest: number,
+        public buttocks: number
     ){};
 }
